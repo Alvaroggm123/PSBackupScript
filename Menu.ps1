@@ -11,13 +11,18 @@ class classMenu {
 
     # Constructor para generar instancia de la clase solo con el nombre.
     classMenu([string]$menuName) {
+        [array]$EndOption = "Exit"
+
         $this.menuName = $menuName
         $this.menuOptions = "No options", "available"
+        $this.menuOptions += $EndOption
     }
     # Sobrecarga de constructor para inicializar con las opciones.
     classMenu([string]$menuName, [array]$menuOptions) {
+        [array]$EndOption = "Exit"
         $this.menuName = $menuName
         $this.menuOptions = $menuOptions
+        $this.menuOptions += $EndOption
     }
     
     hidden [int] Choose([int]$default) {
@@ -52,23 +57,41 @@ class classMenu {
         return $this.Choose($default)
     }
     
-    hidden [int] funcMenu () {
-        Clear-Host
-        [int]$counter = 0
-        Write-Host "- - - - - ", $this.menuName, "- - - - - " -ForegroundColor White
-        foreach ($element in $this.menuOptions) {
-            $counter++
-            Write-Host "[", $counter, "] -  ", $element -Separator '' -ForegroundColor Blue
-        }
-        return $this.Choose(0)
+    [int] start (){
+        do {
+            [int]$choosenIndex = $this.funcMenu(0)
+        } while (
+            
+            $choosenIndex -lt 1 -or $choosenIndex -gt $this.menuOptions.Length -or !$choosenIndex
+        )
+        return $choosenIndex
+    }
+    
+    [int] start ([int]$default){
+        do {
+            [int]$choosenIndex = $this.funcMenu($default)
+        } while (
+            
+            $choosenIndex -lt 1 -or $choosenIndex -gt $this.menuOptions.Length -or !$choosenIndex
+        )
+        return $choosenIndex
     }
 }
 
-[array]$opciones = "Opcion 1", "Opcion 2", "Opcion 3"
+[array]$opciones = "Realizar respaldo general", "Respaldar último respaldo", "Eliminar respaldo más viejo"
 $menuMain = [classMenu]::new("Main Menu", $opciones)
-$respuesta = $menuMain.funcMenu()
+$respuesta = $menuMain.start(1)
 
-Write-Host $respuesta
+switch ($respuesta) {
+    1 { 
+        Write-Host "Opcion 1 ejecutada correctamente"
+     }
+    2 { 
+        Write-Host "Opcion 2 ejecutada correctamente"
+     }
+    Default {}
+}
+
 Pause
 
 

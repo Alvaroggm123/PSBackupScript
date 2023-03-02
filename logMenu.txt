@@ -305,3 +305,162 @@ True
 Windows PowerShell transcript end
 End time: 20230302121244
 **********************
+**********************
+Windows PowerShell transcript start
+Start time: 20230302123445
+Username: ENGDESK0001\itusm
+RunAs User: ENGDESK0001\itusm
+Configuration Name: 
+Machine: ENGDESK0001 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass .\Menu.ps1
+Process ID: 10592
+PSVersion: 5.1.22621.963
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.963
+BuildVersion: 10.0.22621.963
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is logMenu.txt
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20230302123445
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20230302124223
+Username: ENGDESK0001\itusm
+RunAs User: ENGDESK0001\itusm
+Configuration Name: 
+Machine: ENGDESK0001 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass .\Menu.ps1
+Process ID: 22440
+PSVersion: 5.1.22621.963
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.963
+BuildVersion: 10.0.22621.963
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is logMenu.txt
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20230302124223
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20230302124300
+Username: ENGDESK0001\itusm
+RunAs User: ENGDESK0001\itusm
+Configuration Name: 
+Machine: ENGDESK0001 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass .\Menu.ps1
+Process ID: 14968
+PSVersion: 5.1.22621.963
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.963
+BuildVersion: 10.0.22621.963
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is logMenu.txt
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20230302124300
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20230302124327
+Username: ENGDESK0001\itusm
+RunAs User: ENGDESK0001\itusm
+Configuration Name: 
+Machine: ENGDESK0001 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass .\Menu.ps1
+Process ID: 11684
+PSVersion: 5.1.22621.963
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.963
+BuildVersion: 10.0.22621.963
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Cannot convert value "a" to type "System.Int32". Error: "Input string was not in a correct format."
+At C:\Users\itusm\OneDrive - tec tijuana\Desktop\BacupScripts\Menu.ps1:46 char:16
++         return $answ
++                ~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidCastFromStringToInteger
+Cannot convert value "a" to type "System.Int32". Error: "Input string was not in a correct format."
+At C:\Users\itusm\OneDrive - tec tijuana\Desktop\BacupScripts\Menu.ps1:46 char:16
++         return $answ
++                ~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidCastFromStringToInteger
+
+Transcript started, output file is logMenu.txt
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript start
+Start time: 20230302124543
+Username: ENGDESK0001\itusm
+RunAs User: ENGDESK0001\itusm
+Configuration Name: 
+Machine: ENGDESK0001 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass .\Menu.ps1
+Process ID: 21352
+PSVersion: 5.1.22621.963
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.963
+BuildVersion: 10.0.22621.963
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is logMenu.txt
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20230302124543
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20230302124650
+Username: ENGDESK0001\itusm
+RunAs User: ENGDESK0001\itusm
+Configuration Name: 
+Machine: ENGDESK0001 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass .\Menu.ps1
+Process ID: 13024
+PSVersion: 5.1.22621.963
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.963
+BuildVersion: 10.0.22621.963
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is logMenu.txt
+PS>$global:?
+True
+**********************
+Windows PowerShell transcript end
+End time: 20230302124650
+**********************
