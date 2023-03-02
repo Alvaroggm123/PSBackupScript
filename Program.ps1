@@ -1,4 +1,4 @@
-.\Menu.ps1
+. .\lib\Menu.ps1
 # +------------------------------------------------------+
 # +                Comienza ejecución                    +
 # +------------------------------------------------------+
@@ -20,5 +20,5 @@ switch ($respuesta) {
 # +---------------------+
 # + LOG de la ejecución +
 # +---------------------+
-Start-Transcript -Append log_Program.txt
+Start-Transcript -Append .\log\log_Program.txt
 Clear-Host

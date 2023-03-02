@@ -51,7 +51,7 @@ class classMenu {
         }
         catch {
             Write-Host "Error with input, must type a number..."
-            Start-Transcript -Append log_menu.txt
+            Start-Transcript -Append .\log\log_menu.txt
         }
     
         # Retornamos respuesta
