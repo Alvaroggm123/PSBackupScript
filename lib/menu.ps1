@@ -128,7 +128,20 @@ class classMenu {
         Write-Host "- - - - - ", $this.menuName, "- - - - - " -ForegroundColor White
         foreach ($element in $this.menuOptions) {
             $counter++
-            Write-Host "[", $counter, "] -  ", $element -Separator '' -ForegroundColor Blue
+            Write-Host "["  -NoNewline
+
+            # +-------------------+
+            # + Coloreado de      +
+            # + opción default.   +
+            # +-------------------+
+            if ($default -eq $counter) {
+                Write-Host $counter -NoNewline -ForegroundColor Green
+            }
+            else {
+                Write-Host $counter -NoNewline -ForegroundColor Yellow
+            }
+            
+            Write-Host "] -  ", $element -Separator '' -ForegroundColor Blue
         }
         return $this.Choose($default)
     }
@@ -147,7 +160,7 @@ class classMenu {
     # + opción por defecto es la  +
     # + salida del programa.      +
     # +---------------------------+
-    [int] start (){
+    [int] start () {
         do {
             # +-------------------+
             # + Captura de Choose +
@@ -160,7 +173,7 @@ class classMenu {
             # + activo en la      +
             # + terminal.         +
             # +-------------------+
-            if ($choosenIndex -lt 1 ){
+            if ($choosenIndex -lt 1 ) {
                 return $this.menuOptions.Length
             }
         } while (
@@ -184,7 +197,7 @@ class classMenu {
     # + asociar una opción por    +
     # + defecto.                  +
     # +---------------------------+
-    [int] start ([int]$default){
+    [int] start ([int]$default) {
         do {
             # +-------------------+
             # + Captura de Choose +
@@ -197,7 +210,7 @@ class classMenu {
             # + la opción por     +
             # + defecto.          +
             # +-------------------+
-            if ($choosenIndex -lt 1 ){
+            if ($choosenIndex -lt 1 ) {
                 return $default
             }
         } while (
