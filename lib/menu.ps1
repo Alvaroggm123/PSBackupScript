@@ -95,10 +95,11 @@ class classMenu {
         $answ = $this.$default
         try {
             [int]$timer = $this.menuTimer
-            while ((-NOT [Console]::KeyAvailable) -AND ($timer -ge 0)) {
+            do {
                 Start-Sleep -Seconds 1
                 $timer--
             }
+            while ((-NOT [Console]::KeyAvailable) -AND ($timer -ge 0))
             if ((-NOT [Console]::KeyAvailable)) {
                 return $answ
             }
