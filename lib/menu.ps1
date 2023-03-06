@@ -94,6 +94,14 @@ class classMenu {
         # +-----------------------+
         $answ = $this.$default
         try {
+            [int]$timer = $this.menuTimer
+            while ((-NOT [Console]::KeyAvailable) -AND ($timer -ge 0)) {
+                Start-Sleep -Seconds 1
+                $timer--
+            }
+            if ((-NOT [Console]::KeyAvailable)) {
+                return $answ
+            }
             $answ = Read-Host
             return $answ
         }

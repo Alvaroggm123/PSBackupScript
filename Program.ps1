@@ -12,6 +12,8 @@
 # +------------------------+
 [array]$opciones = "Realizar respaldo general", "Respaldar último respaldo", "Eliminar respaldo más viejo"
 $menuMain = [classMenu]::new("Menú principal", $opciones)
+$menuMain.menuTimer = 5
+
 
 # +------------------------+
 # +  Opciones del Menú     +
