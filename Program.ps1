@@ -20,7 +20,8 @@ $menuMain.menuTimer = 5
 # +------------------------+
 [int]$option
 while ($option -ne $menuMain.menuOptions.Length) {
-    $option = $menuMain.start(1)
+    $option = $menuMain.start(2,3)
+    Clear-Host
     switch ($option) {
         1 { 
             Write-Host "Opcion 1 ejecutada correctamente"

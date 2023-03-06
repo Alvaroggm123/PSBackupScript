@@ -233,4 +233,43 @@ class classMenu {
         # +-----------------------+
         return $choosenIndex
     }
+    
+    # +---------------------------+
+    # + Sobrecarga de la función  +
+    # + start                     +
+    # +---------------------------+
+    # + Esta función permite      +
+    # + asociar una opción por    +
+    # + defecto y asociar un      +
+    # + temporizador al menú.     +
+    # +---------------------------+
+    [int] start ([int]$default, [int]$countDown) {
+        do {
+            # +-------------------+
+            # + Captura de Choose +
+            # +-------------------+
+            [int]$choosenIndex = $this.funcMenu($default)
+            $this.menuTimer = $countDown
+
+            # +-------------------+
+            # + Se valida si el   +
+            # + usuario escogió   +
+            # + la opción por     +
+            # + defecto.          +
+            # +-------------------+
+            if ($choosenIndex -lt 1 ) {
+                return $default
+            }
+        } while (
+            # +-------------------+
+            # + Validación de     +
+            # + Salida del prog,  +
+            # +-------------------+
+            $choosenIndex -gt $this.menuOptions.Length -or !$choosenIndex
+        )
+        # +-----------------------+
+        # + Retorno de opción     +
+        # +-----------------------+
+        return $choosenIndex
+    }
 }
