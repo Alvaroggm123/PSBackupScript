@@ -10,21 +10,26 @@ class Menu {
     [void]Show() {
         Clear-Host
         $consoleWidth = [Console]::WindowWidth - 2
-        Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f ("-" * ($consoleWidth-2)))
-        Write-Host ("|" + " {0,-29} |" -f "Option Description")
-        Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f ("-" * ($consoleWidth-2)))
+        Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth-2)))
+        Write-Host ("|" + " [{0,-7}] | {1,-29}" -f "Option", "Description") -NoNewline
+        [Console]::SetCursorPosition(([Console]::WindowWidth - 1), 1)
+        Write-Host ("|")
+        Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth-2)))
         foreach ($item in $this.Options.GetEnumerator()) {
-            $optionText = "[ {0,2} ] {1,-25}" -f $item.Key, $item.Value
+            $optionText = "[ {0,5} ] | {1,-25}" -f $item.Key, $item.Value
             $optionWidth = $optionText.Length
             $paddingWidth = $consoleWidth - $optionWidth - 3
             Write-Host ("|" + " {0} {1,-$paddingWidth} |" -f $optionText, (" " * ($paddingWidth - 1)))
         }
-        Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f ("-" * ($consoleWidth-2)))
+        Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth-2)))
+        Write-Host ("Opción: ") -NoNewline
     }
         
     
 
     [string]GetChoice([int]$timeoutSeconds) {
+        $oldLeft = [Console]::CursorLeft
+        $oldTop = [Console]::CursorTop
         $timer = New-Object System.Diagnostics.Stopwatch
         $timer.Start()
         while ($timer.Elapsed.TotalSeconds -lt $timeoutSeconds) {
@@ -32,6 +37,8 @@ class Menu {
             $timerString = "Time left: {0:mm\:ss}" -f ([datetime]"00:00:00").AddSeconds($timeLeft)
             [Console]::SetCursorPosition(([Console]::WindowWidth - $timerString.Length - 3), 1)
             [Console]::Write($timerString)
+
+            [Console]::SetCursorPosition($oldLeft, $oldTop)
             Start-Sleep -Milliseconds 50
     
             if ([Console]::KeyAvailable) {
