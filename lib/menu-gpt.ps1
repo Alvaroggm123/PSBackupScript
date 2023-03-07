@@ -30,9 +30,8 @@ class Menu {
         while ($timer.Elapsed.TotalSeconds -lt $timeoutSeconds) {
             $timeLeft = $timeoutSeconds - [math]::Round($timer.Elapsed.TotalSeconds)
             $timerString = "Time left: {0:mm\:ss}" -f ([datetime]"00:00:00").AddSeconds($timeLeft)
-            $timerPadding = " " * ([Console]::WindowWidth - $timerString.Length)
-            [Console]::SetCursorPosition(0, [Console]::CursorTop)
-            [Console]::Write($timerPadding + $timerString)
+            [Console]::SetCursorPosition(([Console]::WindowWidth - $timerString.Length - 3), 1)
+            [Console]::Write($timerString)
             Start-Sleep -Milliseconds 50
     
             if ([Console]::KeyAvailable) {
