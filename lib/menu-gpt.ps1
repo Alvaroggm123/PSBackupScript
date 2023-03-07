@@ -8,39 +8,49 @@ class Menu {
     }
 
     [void]Show() {
-        Write-Host "Select an option:"
-        foreach ($key in $this.Options.Keys) {
-            Write-Host "$key. $($this.Options[$key])"
+        Clear-Host
+        $consoleWidth = [Console]::WindowWidth - 2
+        Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f ("-" * ($consoleWidth-2)))
+        Write-Host ("|" + " {0,-29} |" -f "Option Description")
+        Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f ("-" * ($consoleWidth-2)))
+        foreach ($item in $this.Options.GetEnumerator()) {
+            $optionText = "[ {0,2} ] {1,-25}" -f $item.Key, $item.Value
+            $optionWidth = $optionText.Length
+            $paddingWidth = $consoleWidth - $optionWidth - 3
+            Write-Host ("|" + " {0} {1,-$paddingWidth} |" -f $optionText, (" " * ($paddingWidth - 1)))
         }
+        Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f ("-" * ($consoleWidth-2)))
     }
+        
+    
 
     [string]GetChoice([int]$timeoutSeconds) {
-        $choice = $null
         $timer = New-Object System.Diagnostics.Stopwatch
         $timer.Start()
-        while (-not $choice -and $timer.Elapsed.TotalSeconds -lt $timeoutSeconds) {
-            if ([Console]::KeyAvailable) {
-                $key = [Console]::ReadKey("NoEcho,IncludeKeyDown")
-                $choice = $key.Character
-            }
+        while ($timer.Elapsed.TotalSeconds -lt $timeoutSeconds) {
             $timeLeft = $timeoutSeconds - [math]::Round($timer.Elapsed.TotalSeconds)
             $timerString = "Time left: {0:mm\:ss}" -f ([datetime]"00:00:00").AddSeconds($timeLeft)
             $timerPadding = " " * ([Console]::WindowWidth - $timerString.Length)
             [Console]::SetCursorPosition(0, 0)
             [Console]::Write($timerPadding + $timerString)
             Start-Sleep -Milliseconds 50
+    
+            if ([Console]::KeyAvailable) {
+                $key = [Console]::ReadKey("NoEcho,IncludeKeyDown")
+                if ($key.Key -eq "Enter") {
+                    $input = [Console]::ReadLine().Trim()
+                    if ($this.Options.ContainsKey($input)) {
+                        return $input
+                    }
+                }
+            }
         }
-
+    
         [Console]::SetCursorPosition(0, 0)
         [Console]::Write((" " * [Console]::WindowWidth).PadRight([Console]::WindowWidth))
         [Console]::SetCursorPosition(0, 1)
-
-        if (-not $choice) {
-            $choice = $this.DefaultOption
-            Write-Host "No option selected. Default option ($($this.Options[$this.DefaultOption])) selected."
-        }
-
-        return $choice
-    }
-
+    
+        Write-Host "No option selected. Default option ($($this.Options[$this.DefaultOption])) selected."
+        return $this.DefaultOption
+    }    
 }

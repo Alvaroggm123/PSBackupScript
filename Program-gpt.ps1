@@ -1,7 +1,7 @@
 # Import the Menu class from Menu.ps1
 . ".\lib\menu-gpt.ps1"
 
-$options = @{
+[hashtable]$options = [ordered]@{
     "1" = "Create a backup of a custom folder"
     "2" = "Backup OneDrive Documents"
     "3" = "Remove oldest backup"
