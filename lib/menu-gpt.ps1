@@ -31,7 +31,7 @@ class Menu {
             $timeLeft = $timeoutSeconds - [math]::Round($timer.Elapsed.TotalSeconds)
             $timerString = "Time left: {0:mm\:ss}" -f ([datetime]"00:00:00").AddSeconds($timeLeft)
             $timerPadding = " " * ([Console]::WindowWidth - $timerString.Length)
-            [Console]::SetCursorPosition(0, 0)
+            [Console]::SetCursorPosition(0, [Console]::CursorTop)
             [Console]::Write($timerPadding + $timerString)
             Start-Sleep -Milliseconds 50
     
@@ -46,9 +46,9 @@ class Menu {
             }
         }
     
-        [Console]::SetCursorPosition(0, 0)
+        [Console]::SetCursorPosition(0, [Console]::CursorTop)
         [Console]::Write((" " * [Console]::WindowWidth).PadRight([Console]::WindowWidth))
-        [Console]::SetCursorPosition(0, 1)
+        [Console]::SetCursorPosition(0, [Console]::CursorTop+1)
     
         Write-Host "No option selected. Default option ($($this.Options[$this.DefaultOption])) selected."
         return $this.DefaultOption
