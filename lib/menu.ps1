@@ -1,276 +1,89 @@
-# +------------------------------------------------------+
-# +                     Clase Menú                       +
-# +------------------------------------------------------+
-# + Se trata de un script que permite generar instancias +
-# + de la clase classMenu, estas permiten asociar arrays +
-# + con las respectivas opciones a escoger, además,      +
-# + cuenta con la posibilidad de enviar una respuesta    +
-# + que funcióne como la opción "Por defecto".           +
-# +------------------------------------------------------+
-class classMenu {
-    # +----------------------------------+
-    # + Atributos de la clase            +
-    # +----------------------------------+
-    [string]$menuName
-    [array]$menuOptions
-    [int]$menuTimer = 60
+class Menu {
+    [hashtable]$Options
+    [string]$DefaultOption
 
-    # +----------------------------------+
-    # + Constructores de la clase        +
-    # +----------------------------------+
-    
-    # +---------------------------+
-    # + Constructor principal     +
-    # +---------------------------+
-    # + Este constructor solo     +
-    # + requiere del nombre de la +
-    # + instancia o "Título".     +
-    # +---------------------------+
-    classMenu([string]$menuName) {
-        [array]$EndOption = "Exit"
-
-        $this.menuName = $menuName
-        $this.menuOptions = "No options", "available"
-        $this.menuOptions += $EndOption
+    Menu([hashtable]$options, [string]$defaultOption) {
+        $this.Options = $options
+        $this.DefaultOption = $defaultOption
     }
     
-    # +---------------------------+
-    # + Constructor sobrecargado  +
-    # +---------------------------+
-    # + Este constructor requiere +
-    # + del nombre de la instancia+
-    # + y el conjunto de opciones +
-    # + que tendrán.              +
-    # +---------------------------+
-    classMenu([string]$menuName, [array]$menuOptions) {
-        [array]$EndOption = "Exit"
-        $this.menuName = $menuName
-        $this.menuOptions = $menuOptions
-        $this.menuOptions += $EndOption
-    }
-
-    # +---------------------------+
-    # + Constructor con tiempo    +
-    # +---------------------------+
-    # + Este constructor requiere +
-    # + de todos los parametros   +
-    # + incluyendo el tiempo      +
-    # + límite para responder.    +
-    # +---------------------------+
-    classMenu([string]$menuName, [array]$menuOptions, [int]$menuTimer) {
-        [array]$EndOption = "Exit"
-        $this.menuName = $menuName
-        $this.menuOptions = $menuOptions
-        $this.menuOptions += $EndOption
-        $this.timer = $menuTimer
-    }
-    
-    # +----------------------------------+
-    # + funciónes y métodos de la clase  +
-    # +----------------------------------+
-    
-    # +---------------------------+
-    # + función oculta "Choose"   +
-    # +---------------------------+
-    # + función encargada de      +
-    # + enlistar las opciones     +
-    # + disponibles.              +
-    # +---------------------------+
-    hidden [int] Choose([int]$default) {
-
-        # +-----------------------+
-        # + Impresíón de espera   +
-        # + de respuesta.         +
-        # +-----------------------+
-        Write-Host "Choose (" -NoNewline -ForegroundColor Cyan
-        Write-Host "default" -NoNewline -ForegroundColor red
-        Write-Host " = " -NoNewline -ForegroundColor Cyan
-        Write-Host $default -NoNewline -ForegroundColor Green
-        Write-Host "): " -NoNewline -ForegroundColor Cyan
-
-        # +-----------------------+
-        # + Obtenemos respuesta   +
-        # + del usuario.          +
-        # +-----------------------+
-        $answ = $this.$default
-        try {
-            [int]$timer = $this.menuTimer
-            do {
-                Start-Sleep -Seconds 1
-                $timer--
-            }
-            while ((-NOT [Console]::KeyAvailable) -AND ($timer -ge 0))
-            if ((-NOT [Console]::KeyAvailable)) {
-                return $answ
-            }
-            $answ = Read-Host
-            return $answ
-        }
-        catch {
-            
-            # +-------------------+
-            # + En caso de encon- +
-            # + rar un error, se  +
-            # + generará un log.  +
-            # +-------------------+
-            Write-Host "Error with input, must type a number..."
-            Start-Transcript -Append .\log\log_menu.txt
-        }
-    
-        # +-----------------------+
-        # + Retorno de respuesta. +
-        # +-----------------------+
-        return $answ
-    }
-    
-    # +---------------------------+
-    # + función oculta "funcMenu" +
-    # +---------------------------+
-    # + función encargada de      +
-    # + imprimir el título del    +
-    # + menú instanciado y las    +
-    # + opciones asociadas.       +
-    # +---------------------------+
-    hidden [int] funcMenu ([int]$default) {
+    [void]Show() {
         Clear-Host
-        [int]$counter = 0
-        Write-Host "- - - - - ", $this.menuName, "- - - - - " -ForegroundColor White
-        foreach ($element in $this.menuOptions) {
-            $counter++
-            Write-Host "["  -NoNewline
-
-            # +-------------------+
-            # + Coloreado de      +
-            # + opción default.   +
-            # +-------------------+
-            if ($default -eq $counter) {
-                Write-Host $counter -NoNewline -ForegroundColor Green
-            }
-            else {
-                Write-Host $counter -NoNewline -ForegroundColor Yellow
-            }
-            
-            Write-Host "] -  ", $element -Separator '' -ForegroundColor Blue
+        $consoleWidth = [Console]::WindowWidth - 2
+        Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth - 2)))
+        Write-Host ("|" + " [{0,-7}] | {1,-29}" -f " Option", "Description") -NoNewline
+        [Console]::SetCursorPosition(([Console]::WindowWidth - 1), 1)
+        Write-Host ("|")
+        Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth - 2)))
+        foreach ($item in $this.Options.GetEnumerator() | Sort-Object Key) {
+            $optionText = "[ {0,5} ] | {1,-25}" -f $item.Key, $item.Value
+            $optionWidth = $optionText.Length
+            $paddingWidth = $consoleWidth - $optionWidth - 3
+            Write-Host ("|" + " {0} {1,-$paddingWidth} |" -f $optionText, (" " * ($paddingWidth - 1)))
         }
-        return $this.Choose($default)
+        Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth - 2)))
+        $oldTop = [Console]::CursorTop
+        Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f (" " * ($consoleWidth - 2)))
+        Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth - 2)))
+        [Console]::SetCursorPosition(5, $oldTop)
+        Write-Host ("Option:") -NoNewline
+        [Console]::SetCursorPosition([Console]::CursorLeft, $oldTop)
     }
     
-    # +---------------------------+
-    # + función oculta "start"    +
-    # +---------------------------+
-    # + Esta función es la que se +
-    # + encarga de regresar el    +
-    # + valor/"opción" que el     +
-    # + usuario escoja, esto      +
-    # + considerando a la última  +
-    # + opción como la opción de  +
-    # + salida del programa.      +
-    # + Se debe considerar que la +
-    # + opción por defecto es la  +
-    # + salida del programa.      +
-    # +---------------------------+
-    [int] start () {
-        do {
-            # +-------------------+
-            # + Captura de Choose +
-            # +-------------------+
-            [int]$choosenIndex = $this.funcMenu($this.menuOptions.Length)
+    [string]GetChoice([int]$timeoutSeconds) {
+        $oldLeft = [Console]::CursorLeft
+        $oldTop = [Console]::CursorTop
+        $timer = New-Object System.Diagnostics.Stopwatch
+        $timer.Start()
+        $selectedOption = $null
+        while ($timer.Elapsed.TotalSeconds -lt $timeoutSeconds) {
+            $timeLeft = $timeoutSeconds - [math]::Round($timer.Elapsed.TotalSeconds)
+            $timerString = "| Time left: {0:mm\:ss}" -f ([datetime]"00:00:00").AddSeconds($timeLeft)
+            [Console]::SetCursorPosition(([Console]::WindowWidth - $timerString.Length - 3), 1)
+            [Console]::Write($timerString)
+    
+            [Console]::SetCursorPosition($oldLeft, $oldTop)
+            Start-Sleep -Milliseconds 50
+            function UpdateConsoleOutput($selectedOption) {
+                Write-Host -ForegroundColor Yellow " $($this.Options[$selectedOption]) " -NoNewline
+                Write-Host "(ENTER to confirm...)" -ForegroundColor Green -NoNewline
+                Write-Host (" " * ([Console]::WindowWidth - [Console]::CursorLeft - 1))
+            }
+    
+            if ([Console]::KeyAvailable) {
+                $key = [Console]::ReadKey("NoEcho,IncludeKeyDown")
+                if ($key.Key -eq "Enter" -and $selectedOption -ne $null) {
+                    Clear-Host
+                    return $selectedOption
+                }
+                elseif ($key.KeyChar -in $this.Options.Keys) {
+                    $selectedOption = $key.KeyChar.ToString()
+                    UpdateConsoleOutput $selectedOption
+                }
+                elseif ($key.Key -eq "DownArrow") {
+                    $optionKeys = [array]$this.Options.Keys
+                    $selectedIndex = [array]::IndexOf($optionKeys, $selectedOption)
+                    $selectedIndex = ($selectedIndex + 1) % $optionKeys.Length
+                    $selectedOption = $optionKeys[$selectedIndex]
+                    UpdateConsoleOutput $selectedOption
+                }
+                elseif ($key.Key -eq "UpArrow") {
+                    $optionKeys = [array]$this.Options.Keys
+                    $selectedIndex = [array]::IndexOf($optionKeys, $selectedOption)
+                    $selectedIndex = ($selectedIndex - 1 + $optionKeys.Length) % $optionKeys.Length
+                    $selectedOption = $optionKeys[$selectedIndex]
+                    UpdateConsoleOutput $selectedOption
+                }
+            }
             
-            # +-------------------+
-            # + Se valida si el   +
-            # + usuario está      +
-            # + activo en la      +
-            # + terminal.         +
-            # +-------------------+
-            if ($choosenIndex -lt 1 ) {
-                return $this.menuOptions.Length
-            }
-        } while (
-            # +-------------------+
-            # + Validación de     +
-            # + Salida del prog,  +
-            # +-------------------+
-            $choosenIndex -gt $this.menuOptions.Length -or !$choosenIndex
-        )
-        # +-----------------------+
-        # + Retorno de opción     +
-        # +-----------------------+
-        return $choosenIndex
+        }
+    
+        [Console]::SetCursorPosition(0, [Console]::CursorTop)
+        [Console]::Write((" " * [Console]::WindowWidth).PadRight([Console]::WindowWidth))
+        [Console]::SetCursorPosition(0, [Console]::CursorTop + 1)
+    
+        Write-Host "No option selected. Default option ($($this.Options[$this.DefaultOption])) selected."
+        return $this.DefaultOption
     }
     
-    # +---------------------------+
-    # + Sobrecarga de la función  +
-    # + start                     +
-    # +---------------------------+
-    # + Esta función permite      +
-    # + asociar una opción por    +
-    # + defecto.                  +
-    # +---------------------------+
-    [int] start ([int]$default) {
-        do {
-            # +-------------------+
-            # + Captura de Choose +
-            # +-------------------+
-            [int]$choosenIndex = $this.funcMenu($default)
-
-            # +-------------------+
-            # + Se valida si el   +
-            # + usuario escogió   +
-            # + la opción por     +
-            # + defecto.          +
-            # +-------------------+
-            if ($choosenIndex -lt 1 ) {
-                return $default
-            }
-        } while (
-            # +-------------------+
-            # + Validación de     +
-            # + Salida del prog,  +
-            # +-------------------+
-            $choosenIndex -gt $this.menuOptions.Length -or !$choosenIndex
-        )
-        # +-----------------------+
-        # + Retorno de opción     +
-        # +-----------------------+
-        return $choosenIndex
-    }
-    
-    # +---------------------------+
-    # + Sobrecarga de la función  +
-    # + start                     +
-    # +---------------------------+
-    # + Esta función permite      +
-    # + asociar una opción por    +
-    # + defecto y asociar un      +
-    # + temporizador al menú.     +
-    # +---------------------------+
-    [int] start ([int]$default, [int]$countDown) {
-        do {
-            # +-------------------+
-            # + Captura de Choose +
-            # +-------------------+
-            [int]$choosenIndex = $this.funcMenu($default)
-            $this.menuTimer = $countDown
-
-            # +-------------------+
-            # + Se valida si el   +
-            # + usuario escogió   +
-            # + la opción por     +
-            # + defecto.          +
-            # +-------------------+
-            if ($choosenIndex -lt 1 ) {
-                return $default
-            }
-        } while (
-            # +-------------------+
-            # + Validación de     +
-            # + Salida del prog,  +
-            # +-------------------+
-            $choosenIndex -gt $this.menuOptions.Length -or !$choosenIndex
-        )
-        # +-----------------------+
-        # + Retorno de opción     +
-        # +-----------------------+
-        return $choosenIndex
-    }
 }

@@ -1,49 +1,44 @@
-# +------------------------------------------------------+
-# +             Referencia a bibliotecas                 +
-# +------------------------------------------------------+
-. .\lib\menu.ps1
-. .\lib\interactions.ps1
-# +------------------------------------------------------+
-# +                Comienza ejecución                    +
-# +------------------------------------------------------+
+# Import the Menu class from Menu.ps1
+. ".\lib\menu.ps1"
 
-# +------------------------+
-# +    Creación de Menú    +
-# +------------------------+
-[array]$opciones = "Realizar respaldo general", "Respaldar último respaldo", "Eliminar respaldo más viejo"
-$menuMain = [classMenu]::new("Menú principal", $opciones)
-$menuMain.menuTimer = 5
+[hashtable]$options = [ordered]@{
+    "1" = "Create a backup of a custom folder"
+    "2" = "Backup OneDrive Documents"
+    "3" = "Remove oldest backup"
+    "4" = "Exit"
+}
+$defaultOption = "4"
+$menu = [Menu]::new($options, $defaultOption)
 
-
-# +------------------------+
-# +  Opciones del Menú     +
-# +------------------------+
-[int]$option
-while ($option -ne $menuMain.menuOptions.Length) {
-    $option = $menuMain.start(2,3)
-    Clear-Host
-    switch ($option) {
-        1 { 
-            Write-Host "Opcion 1 ejecutada correctamente"
-            pressKey
+do {
+    if ($menu) {
+        $menu.Show()
+        $choice = $menu.GetChoice(60)
+    }
+    # Execute the selected option
+    switch ($choice) {
+        "1" {
+            # Create a backup of a custom folder
+            $command = ".\lib\backup\BackupCustomFolder.ps1"
+            Invoke-Expression $command
         }
-        2 { 
-            Write-Host "Opcion 2 ejecutada correctamente"
-            pressKey
+        "2" {
+            # Backup OneDrive Documents
+            $command = ".\lib\backup\BackupOneDrive.ps1"
+            Invoke-Expression $command
         }
-        3 { 
-            Write-Host "Opcion 3 ejecutada correctamente"
-            pressKey
+        "3" {
+            # Remove oldest backup
+            $command = ".\RemoveOldestBackup.ps1"
+            Invoke-Expression $command
         }
-        Default {
-            Write-Host "Fin de la ejecución..."
-            Pause
+        "4" {
+            # Exit
+            Write-Host "Exiting..."
+            return
+        }
+        default {
+            Write-Error "Invalid option: $choice"
         }
     }
-}
-
-# +------------------------------------------------------+
-# +                Log de la ejecución                   +
-# +------------------------------------------------------+
-Start-Transcript -Append .\log\log_Program.txt
-Clear-Host
+} while ($choice -ne "4")
