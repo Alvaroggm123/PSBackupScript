@@ -6,7 +6,7 @@ class Menu {
         $this.Options = $options
         $this.DefaultOption = $defaultOption
     }
-    
+
     [void]Show() {
         Clear-Host
         $consoleWidth = [Console]::WindowWidth - 2
@@ -26,10 +26,9 @@ class Menu {
         Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f (" " * ($consoleWidth - 2)))
         Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth - 2)))
         [Console]::SetCursorPosition(5, $oldTop)
-        Write-Host ("Option:") -NoNewline
-        [Console]::SetCursorPosition([Console]::CursorLeft, $oldTop)
+        Write-Host "Option:" -NoNewline
     }
-    
+
     [string]GetChoice([int]$timeoutSeconds) {
         $oldLeft = [Console]::CursorLeft
         $oldTop = [Console]::CursorTop
@@ -44,8 +43,16 @@ class Menu {
     
             [Console]::SetCursorPosition($oldLeft, $oldTop)
             Start-Sleep -Milliseconds 50
+            
+            $sortedKeys = $this.Options.Keys | Sort-Object
+            $sortedOptions = @{}
+            foreach ($key in $sortedKeys) {
+                $sortedOptions[$key] = $this.Options[$key]
+            }
+    
             function UpdateConsoleOutput($selectedOption) {
-                Write-Host -ForegroundColor Yellow " $($this.Options[$selectedOption]) " -NoNewline
+                Write-Host -ForegroundColor Red " [$selectedOption] " -NoNewline
+                Write-Host -ForegroundColor Yellow " $($sortedOptions[$selectedOption]) " -NoNewline
                 Write-Host "(ENTER to confirm...)" -ForegroundColor Green -NoNewline
                 Write-Host (" " * ([Console]::WindowWidth - [Console]::CursorLeft - 1))
             }
@@ -56,26 +63,23 @@ class Menu {
                     Clear-Host
                     return $selectedOption
                 }
-                elseif ($key.KeyChar -in $this.Options.Keys) {
+                elseif ($key.KeyChar -in $sortedKeys) {
                     $selectedOption = $key.KeyChar.ToString()
                     UpdateConsoleOutput $selectedOption
                 }
-                elseif ($key.Key -eq "DownArrow") {
-                    $optionKeys = [array]$this.Options.Keys
-                    $selectedIndex = [array]::IndexOf($optionKeys, $selectedOption)
-                    $selectedIndex = ($selectedIndex + 1) % $optionKeys.Length
-                    $selectedOption = $optionKeys[$selectedIndex]
+                elseif (($key.Key -eq "DownArrow") -or ($key.Key -eq "RightArrow")) {
+                    $selectedIndex = [array]::IndexOf($sortedKeys, $selectedOption)
+                    $selectedIndex = ($selectedIndex + 1) % $sortedKeys.Length
+                    $selectedOption = $sortedKeys[$selectedIndex]
                     UpdateConsoleOutput $selectedOption
                 }
-                elseif ($key.Key -eq "UpArrow") {
-                    $optionKeys = [array]$this.Options.Keys
-                    $selectedIndex = [array]::IndexOf($optionKeys, $selectedOption)
-                    $selectedIndex = ($selectedIndex - 1 + $optionKeys.Length) % $optionKeys.Length
-                    $selectedOption = $optionKeys[$selectedIndex]
+                elseif (($key.Key -eq "UpArrow") -or ($key.Key -eq "LeftArrow")) {
+                    $selectedIndex = [array]::IndexOf($sortedKeys, $selectedOption)
+                    $selectedIndex = ($selectedIndex - 1 + $sortedKeys.Length) % $sortedKeys.Length
+                    $selectedOption = $sortedKeys[$selectedIndex]
                     UpdateConsoleOutput $selectedOption
                 }
             }
-            
         }
     
         [Console]::SetCursorPosition(0, [Console]::CursorTop)
@@ -85,5 +89,6 @@ class Menu {
         Write-Host "No option selected. Default option ($($this.Options[$this.DefaultOption])) selected."
         return $this.DefaultOption
     }
+    
     
 }
