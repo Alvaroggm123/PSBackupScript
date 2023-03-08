@@ -1,29 +1,22 @@
-# Menu options for OneDrive backup
-$onedrivePath = "$env:USERPROFILE\OneDrive"
-$subfolders = Get-ChildItem $onedrivePath -Directory
-$options = @{ "1" = "Backup entire OneDrive folder"; }
-for ($i = 0; $i -lt $subfolders.Count; $i++) {
-    $options["$($i+2)"] = "Backup $($subfolders[$i].Name) folder"
+# Create a backup of a custom folder
+$sourceFolder = Read-Host "Enter the full path of the folder to backup"
+$backupDestination = Read-Host "Enter the full path of the backup destination"
+
+if (-not (Test-Path $sourceFolder)) {
+    Write-Error "Folder $sourceFolder does not exist."
+    return
 }
-$defaultOption = "1"
 
-# Create menu and get user choice
-$menu = [Menu]::new($options, $defaultOption)
-$menu.Show()
-$choice = $menu.GetChoice(30)
-
-# Get backup path and timestamp
-$backupPath = Read-Host "Enter the full path of the backup destination"
-$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-
-# Backup selected folder
-if ($choice -eq "1") {
-    $backupFileName = "OneDrive_$timestamp.zip"
-    Compress-Archive -Path $onedrivePath -DestinationPath "$backupPath\$backupFileName"
-    Write-Host "Backup created at $backupPath\$backupFileName"
-} else {
-    $selectedSubfolder = $subfolders[$choice-2]
-    $backupFileName = "$($selectedSubfolder.Name)_$timestamp.zip"
-    Compress-Archive -Path $selectedSubfolder.FullName -DestinationPath "$backupPath\$backupFileName"
-    Write-Host "Backup of $($selectedSubfolder.Name) created at $backupPath\$backupFileName"
+if (-not (Test-Path $backupDestination)) {
+    Write-Error "Backup destination $backupDestination does not exist."
+    return
 }
+
+$timestampString = Get-Date -Format "yyyyMMdd_HHmmss"
+$backupFolderName = "$($sourceFolder.Split("\")[-1])_$timestampString"
+$backupFolderPath = Join-Path -Path $backupDestination -ChildPath $backupFolderName
+
+Write-Host "Copying $sourceFolder to $backupFolderPath..."
+Copy-Item $sourceFolder -Destination $backupFolderPath -Recurse -Verbose
+
+Write-Host "Backup created at $backupFolderPath"
