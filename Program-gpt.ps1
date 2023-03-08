@@ -13,7 +13,7 @@ $menu = [Menu]::new($options, $defaultOption)
 do {
     if ($menu) {
         $menu.Show()
-        $choice = $menu.GetChoice(10)
+        $choice = $menu.GetChoice(60)
     }
     # Execute the selected option
     switch ($choice) {
