@@ -26,7 +26,7 @@ class Menu {
         Write-Host ("|" + " {0,-$($consoleWidth-2)} |" -f (" " * ($consoleWidth - 2)))
         Write-Host ("+" + " {0,-$($consoleWidth-2)} +" -f ("-" * ($consoleWidth - 2)))
         [Console]::SetCursorPosition(5, $oldTop)
-        Write-Host ("[Press <ENTER> to choose an option] | Option: ") -NoNewline
+        Write-Host ("Option:") -NoNewline
         [Console]::SetCursorPosition([Console]::CursorLeft, $oldTop)
     }
     
@@ -44,6 +44,11 @@ class Menu {
     
             [Console]::SetCursorPosition($oldLeft, $oldTop)
             Start-Sleep -Milliseconds 50
+            function UpdateConsoleOutput($selectedOption) {
+                Write-Host -ForegroundColor Yellow " $($this.Options[$selectedOption]) " -NoNewline
+                Write-Host "(ENTER to confirm...)" -ForegroundColor Green -NoNewline
+                Write-Host (" " * ([Console]::WindowWidth - [Console]::CursorLeft - 1))
+            }
     
             if ([Console]::KeyAvailable) {
                 $key = [Console]::ReadKey("NoEcho,IncludeKeyDown")
@@ -53,11 +58,24 @@ class Menu {
                 }
                 elseif ($key.KeyChar -in $this.Options.Keys) {
                     $selectedOption = $key.KeyChar.ToString()
-                    Write-Host -ForegroundColor Yellow " $($this.Options[$selectedOption]) " -NoNewline
-                    Write-Host "(Press ENTER to confirm...)" -ForegroundColor Green -NoNewline
-                    Write-Host (" " * ([Console]::WindowWidth - [Console]::CursorLeft - 1))
+                    UpdateConsoleOutput $selectedOption
+                }
+                elseif ($key.Key -eq "DownArrow") {
+                    $optionKeys = [array]$this.Options.Keys
+                    $selectedIndex = [array]::IndexOf($optionKeys, $selectedOption)
+                    $selectedIndex = ($selectedIndex + 1) % $optionKeys.Length
+                    $selectedOption = $optionKeys[$selectedIndex]
+                    UpdateConsoleOutput $selectedOption
+                }
+                elseif ($key.Key -eq "UpArrow") {
+                    $optionKeys = [array]$this.Options.Keys
+                    $selectedIndex = [array]::IndexOf($optionKeys, $selectedOption)
+                    $selectedIndex = ($selectedIndex - 1 + $optionKeys.Length) % $optionKeys.Length
+                    $selectedOption = $optionKeys[$selectedIndex]
+                    UpdateConsoleOutput $selectedOption
                 }
             }
+            
         }
     
         [Console]::SetCursorPosition(0, [Console]::CursorTop)
